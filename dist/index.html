@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+ <html>
+   <head>
+     <meta charset="utf-8" />
+     <title>To-Do List</title>
+     <script src="https://kit.fontawesome.com/25ee9e54cc.js" crossorigin="anonymous"></script>
+     <script src="main.js" defer></script>
+   </head>
+   <body>
+    <div class="header"><i class="fas fa-check-double"></i>To-Do List</div>
+    <div id="content">
+      <div class="sidebar">
+        <div class="options">
+          <button class="sideBtn" id="inbox"><i class="fas fa-inbox"></i>Inbox</button>
+          <button class="sideBtn" id="today"><i class="fas fa-calendar-day"></i>Today</button>
+          <button class="sideBtn" id="week"><i class="fas fa-calendar-week"></i>This week</button>
+        </div>
+        <div class="Title">Project :</div>
+        <div class="Projects"></div>
+        <button class="sideBtn" id="addProject"><i class="fas fa-plus"></i>Add Project</button>
+        <div class="projectPopUp">
+          <form id="formProject">
+            <div class="formTitle">New Project:</div>
+            <p>Name: *</p>
+            <div><input id="P_name" type="text" value=""autocomplete="off" placeholder="Name"></div>
+            <button class="formBtn" id="close">Cancel</button>
+            <button class="formBtn" id="addProject">Add Project</button>
+          </form>
+        </div>
+      </div>
+      <div class="main">
+        <div class="Title">Inbox</div>
+        <div class="list"></div>
+        <button class="sideBtn" id="addTask"><i class="fas fa-plus"></i>Add Task</button>
+      </div>
+    </div>
+    <div class="footer"><a href="https://github.com/Bacco40" target="_blank"><i class="fab fa-github"></i></a>Copyright © Matteo Bacchetti - The Odin Project 2022 </div>
+   </body>
+ </html>
