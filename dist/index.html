@@ -23,8 +23,10 @@
             <div class="formTitle">New Project:</div>
             <p>Name: *</p>
             <div><input id="P_name" type="text" value=""autocomplete="off" placeholder="Name"></div>
-            <button class="formBtn" id="close">Cancel</button>
-            <button class="formBtn" id="addProject">Add Project</button>
+            <div class="formBtns">
+              <button class="formBtn" id="close">Cancel</button>
+              <button class="formBtn" id="addProject">Add Project</button>
+            </div>
           </form>
         </div>
       </div>
@@ -32,6 +34,34 @@
         <div class="Title">Inbox</div>
         <div class="list"></div>
         <button class="sideBtn" id="addTask"><i class="fas fa-plus"></i>Add Task</button>
+        <div class="todoPopUp">
+          <form id="formToDO">
+            <div class="formTitle">New Task:</div>
+            <div class="formContent">
+              <div class="leftForm">
+                <p>Name: *</p>
+                <div><input id="T_name" type="text" value=""autocomplete="off" placeholder="Name"></div>
+                <p>Description: *</p>
+                <div><textarea id="T_desc" type="text" value=""autocomplete="off" placeholder="Description"></textarea></div>
+              </div>
+              <div class="rightForm">
+                <p>Due date: * </p>
+                <div><input id="T_date" type="date" value=""autocomplete="off" ></div>
+                <p>Priority: * </p>
+                <div><select id="T_priority" value="null"autocomplete="off">
+                    <option value="null" disabled selected >what's the priority of the task?</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select></div>
+                <div class="taskBtns">
+                  <button class="formBtn" id="close">Cancel</button>
+                  <button class="formBtn" id="addProject">Add Project</button>
+                </div>
+            </div>
+          </div>
+          </form>
+        </div>
       </div>
     </div>
     <div class="footer"><a href="https://github.com/Bacco40" target="_blank"><i class="fab fa-github"></i></a>Copyright © Matteo Bacchetti - The Odin Project 2022 </div>
