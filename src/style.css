@@ -31,8 +31,8 @@ html,body{
     display: flex;
     flex-direction: column;
 }
-:hover.sideBtn , :hover.addBtn{
-    background-color: rgb(209, 205, 205);
+:hover.addBtn, :hover.sideBtn{
+    background-color: rgb(209, 205, 205) !important;
 }
 .sideBtn, .addBtn{
     font-size: 18px;
@@ -188,10 +188,10 @@ p{
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
 }
 .checkbox{
-    width: 3%; 
+    width: 15px; 
     margin: 0;
     margin-right: 5px;
     cursor: pointer;
