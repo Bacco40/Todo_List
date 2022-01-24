@@ -1,4 +1,5 @@
 import './style.css';
+import isSameWeek from 'date-fns/isSameWeek';
 
 let content=document.querySelector("#content");
 content=(()=>{
@@ -18,11 +19,15 @@ content=(()=>{
     let week=document.querySelector('#Week');
     let state=0;
     let state1=0;
+    let todays= new Date();
+    todays.setHours(0,0,0,0);
 
     function mainBuild(){
         let main=document.querySelector('.main');
+        resetDetail();
         addTask();
         if(state==0){
+            resetDetail();
             if(userSelection>2 || userSelection==0){
                 let addButton=document.createElement('button');
                 addButton.classList.add('addBtn');
@@ -99,6 +104,8 @@ content=(()=>{
             this.priority=priority;
             this.id=id;
             this.selection=userSelection;
+            this.status="to do";
+            this.openDetail="0";
         }
     }
 
@@ -143,6 +150,7 @@ content=(()=>{
                 start();
                 newProjects.addEventListener('click',()=>{
                     userSelection=myProjects[i].selection;
+                    state1=0;
                     start();
                 })
             }
@@ -152,17 +160,28 @@ content=(()=>{
                 del.addEventListener('click',()=>{
                     for(let i=0;i<index;i++){
                         if(myProjects[i].selection==del.id){
+                            for(let a=0;a<index1;a++){
+                                if(myTasks[a].selection==myProjects[i].selection){
+                                    myTasks.splice(a,1);
+                                    index1=index1-1;
+                                    a--;
+                                }
+                            }
                             myProjects.splice(i,1);
                             state1=0;
                             index=index-1;
                         }
                     }
-                    userSelection=0;
+                    if(userSelection!=0 && userSelection!=1 && userSelection!=2){
+                        userSelection=0;
+                    }
                     addProject();
                 })
             })
         }else{
-            userSelection=0;
+            if(userSelection!=0 && userSelection!=1 && userSelection!=2){
+                userSelection=0;
+            }
             start();
         }
     }
@@ -172,7 +191,17 @@ content=(()=>{
             list.removeChild(list.firstChild); 
         }
         for(let i=0;i<index1;i++){
-            if(userSelection==myTasks[i].selection){
+            let option=0;
+            let taskDate=new Date(myTasks[i].date.replace(/-/g,'\/'));
+            taskDate.setHours(0,0,0,0);
+            if(userSelection==1 && taskDate.toDateString()==todays.toDateString()){
+                option=1;
+            }
+            let sameWeek= isSameWeek(todays,taskDate);
+            if(userSelection==2 && sameWeek==true){
+                option=1;
+            }
+            if(userSelection==myTasks[i].selection || option==1){
                 let newTask=document.createElement('div');
                 newTask.classList.add('Tasks');
                 newTask.id = myTasks[i].name;
@@ -182,13 +211,25 @@ content=(()=>{
                 }else if(myTasks[i].priority=="medium"){
                     color="orange";
                 }
-                newTask.innerHTML=`<div class="taskName"><input class="checkbox" type="checkbox" id="${myTasks[i].name}">${myTasks[i].name}</div>
+                newTask.innerHTML=`<input class="checkbox" type="checkbox" id="${myTasks[i].id}"><div class="taskName" id="${myTasks[i].id}">${myTasks[i].name}</div>
                                     <div class= "infoTask">${myTasks[i].date}
                                         <button class="edit" id="${myTasks[i].id}"><i class="fas fa-edit"></i></button>
-                                        <i class="fas fa-flag" style="color:${color}"></i>
+                                        <button class="priority"><i class="fas fa-flag" style="color:${color}"></i></button>
                                         <button class="delete_T" id="${myTasks[i].id}"><i class="fas fa-trash-alt"></i></button>
                                     </div>`;
-                list.appendChild(newTask); 
+                if(myTasks[i].status=="done"){
+                    newTask.style.cssText="text-decoration: line-through;opacity:60%;";
+                }
+                list.appendChild(newTask);
+                if(myTasks[i].openDetail=="1"){
+                    let taskDetail=document.createElement('div');
+                    taskDetail.classList.add('taskDetail');
+                    taskDetail.innerHTML=`<div class="rightDetail"><div class="info"><div class="tag">Title:</div><div class="details">${myTasks[i].name}</div></div>
+                    <div class="info"><div class="tag">Due date:</div><div class="details">${myTasks[i].date}</div></div></div>
+                    <div class="rightDetail"><div class="info"><div class="tag">Description:</div><div class="details">${myTasks[i].description}</div></div>
+                    <div class="info"><div class="tag">Priority:</div><div class="details">${myTasks[i].priority}</div></div></div>`
+                    list.appendChild(taskDetail);
+                }  
             }
         }
 
@@ -215,15 +256,49 @@ content=(()=>{
                         VisualizePopUp("2");
                     }
                 }
+                resetDetail();
                 addTask();
             })
             
+        })
+
+        let check=document.querySelectorAll('.checkbox');
+        check.forEach((check)=>{
+            check.addEventListener('click',()=>{
+                for(let i=0;i<index1;i++){
+                    if(myTasks[i].id==check.id){
+                        if(myTasks[i].status=="to do"){
+                            myTasks[i].status="done"; 
+                        }else{
+                            myTasks[i].status="to do"
+                        }
+                    }
+                }
+                addTask();
+            })
+        })
+
+        let taskName=document.querySelectorAll('.taskName');
+        taskName.forEach((taskName)=>{
+            taskName.addEventListener('click',()=>{
+                for(let i=0;i<index1;i++){
+                    if(myTasks[i].id==taskName.id){
+                        if(myTasks[i].openDetail=="0"){
+                            myTasks[i].openDetail="1"; 
+                        }else{
+                            myTasks[i].openDetail="0";
+                        }
+                    }
+                } 
+                addTask();
+            })
         })
     }
     
     let btnAddT=document.querySelector('#addT');
     btnAddT.addEventListener('click', (ev)=>{
         ev.preventDefault();
+        resetDetail();
         let T_name=document.querySelector('#T_name');
         let T_desc=document.querySelector('#T_desc');
         let T_priority=document.querySelector('#T_priority');
@@ -280,5 +355,11 @@ content=(()=>{
             close(closePopUp.value);
         })
     })
+
+    function resetDetail() {
+        for(let i=0;i<index1;i++){
+            myTasks[i].openDetail="0"
+        }
+    }
 
 })();
