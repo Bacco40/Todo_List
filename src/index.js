@@ -22,6 +22,48 @@ content=(()=>{
     let todays= new Date();
     todays.setHours(0,0,0,0);
 
+    function storageAvailable(type) {
+        var storage;
+        try {
+            storage = window[type];
+            var x = '__storage_test__';
+            storage.setItem(x, x);
+            storage.removeItem(x);
+            return true;
+        }
+        catch(e) {
+            return e instanceof DOMException && (
+                // everything except Firefox
+                e.code === 22 ||
+                // Firefox
+                e.code === 1014 ||
+                // test name field too, because code might not be present
+                // everything except Firefox
+                e.name === 'QuotaExceededError' ||
+                // Firefox
+                e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+                // acknowledge QuotaExceededError only if there's something already stored
+                (storage && storage.length !== 0);
+        }
+    }
+    
+    if (storageAvailable('localStorage')) {
+        index=localStorage.getItem('index');
+        index=JSON.parse(index);
+        myProjects=localStorage.getItem('myProjects');
+        myProjects=JSON.parse(myProjects);
+        selection=localStorage.getItem('selection');
+        selection=JSON.parse(selection);
+        userSelection=localStorage.getItem('userSelection');
+        userSelection=JSON.parse(userSelection);
+        myTasks=localStorage.getItem('myTasks');
+        myTasks=JSON.parse(myTasks);
+        index1=localStorage.getItem('index1');
+        index1=JSON.parse(index1);
+        idCode=localStorage.getItem('idCode');
+        idCode=JSON.parse(idCode);
+    }
+
     function mainBuild(){
         let main=document.querySelector('.main');
         resetDetail();
@@ -162,13 +204,13 @@ content=(()=>{
                         if(myProjects[i].selection==del.id){
                             for(let a=0;a<index1;a++){
                                 if(myTasks[a].selection==myProjects[i].selection){
-                                    myTasks.splice(a,1);
-                                    index1=index1-1;
+                                    myTasks.splice(a,1);    //
+                                    index1=index1-1;    //
                                     a--;
                                 }
                             }
-                            myProjects.splice(i,1);
-                            state1=0;
+                            myProjects.splice(i,1);    //
+                            state1=0;   //
                             index=index-1;
                         }
                     }
@@ -238,8 +280,8 @@ content=(()=>{
             del.addEventListener('click',()=>{
                 for(let i=0;i<index1;i++){
                     if(myTasks[i].id==del.id){
-                        myTasks.splice(i,1);
-                        index1=index1-1;
+                        myTasks.splice(i,1);    //
+                        index1=index1-1;    //
                     }
                 }
                 addTask();
@@ -268,9 +310,9 @@ content=(()=>{
                 for(let i=0;i<index1;i++){
                     if(myTasks[i].id==check.id){
                         if(myTasks[i].status=="to do"){
-                            myTasks[i].status="done"; 
+                            myTasks[i].status="done";   //
                         }else{
-                            myTasks[i].status="to do"
+                            myTasks[i].status="to do"   //
                         }
                     }
                 }
@@ -307,15 +349,15 @@ content=(()=>{
             let taskName=T_name.value;
             if(change==0){
                 taskName=new task(T_name.value,T_desc.value,T_date.value,T_priority.value,idCode);
-                myTasks[index1]=taskName;
-                index1=index1+1;
+                myTasks[index1]=taskName;   //
+                index1=index1+1;    //
                 addTask();
-                idCode=idCode+1;   
+                idCode=idCode+1;   //
             }else{
                 for(let i=0;i<index1;i++){
                     taskName=new task(T_name.value,T_desc.value,T_date.value,T_priority.value,toChange);
                     if(myTasks[i].id==toChange){
-                        myTasks[i]=taskName;
+                        myTasks[i]=taskName;    //
                         addTask();
                         change=0;
                         toChange="";
@@ -336,11 +378,11 @@ content=(()=>{
         ev.preventDefault();
         let projectName=document.querySelector('#P_name');
         if(projectName.value!=""){
-            selection=selection+1;
+            selection=selection+1;  //
             let p=projectName.value;
             p=new project(projectName.value);
-            myProjects[index]=p;
-            index=index+1;
+            myProjects[index]=p;    //
+            index=index+1;  //
             addProject();
             userSelection=selection;
             start();
