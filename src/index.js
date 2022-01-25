@@ -19,6 +19,7 @@ content=(()=>{
     let week=document.querySelector('#Week');
     let state=0;
     let state1=0;
+    let storageBase=0;
     let todays= new Date();
     todays.setHours(0,0,0,0);
 
@@ -46,23 +47,47 @@ content=(()=>{
                 (storage && storage.length !== 0);
         }
     }
-    
-    if (storageAvailable('localStorage')) {
-        index=localStorage.getItem('index');
-        index=JSON.parse(index);
-        myProjects=localStorage.getItem('myProjects');
-        myProjects=JSON.parse(myProjects);
-        selection=localStorage.getItem('selection');
-        selection=JSON.parse(selection);
-        userSelection=localStorage.getItem('userSelection');
-        userSelection=JSON.parse(userSelection);
-        myTasks=localStorage.getItem('myTasks');
-        myTasks=JSON.parse(myTasks);
-        index1=localStorage.getItem('index1');
-        index1=JSON.parse(index1);
-        idCode=localStorage.getItem('idCode');
-        idCode=JSON.parse(idCode);
+
+    function checkStorage(){
+        storageBase=localStorage.getItem('storageBase');
+        storageBase=JSON.parse(storageBase);
+        storageBase=parseInt(storageBase);
+        if (storageAvailable('localStorage') && storageBase==1) {
+            index=localStorage.getItem('index');
+            index=JSON.parse(index);
+            index=parseInt(index);
+            myProjects=localStorage.getItem('myProjects');
+            myProjects=JSON.parse(myProjects);
+            selection=localStorage.getItem('selection');
+            selection=JSON.parse(selection);
+            selection=parseInt(selection);
+            userSelection=localStorage.getItem('userSelection');
+            userSelection=JSON.parse(userSelection);
+            userSelection=parseInt(userSelection);
+            myTasks=localStorage.getItem('myTasks');
+            myTasks=JSON.parse(myTasks);
+            index1=localStorage.getItem('index1');
+            index1=JSON.parse(index1);
+            index1=parseInt(index1);
+            idCode=localStorage.getItem('idCode');
+            idCode=JSON.parse(idCode);
+            idCode=parseInt(idCode); 
+        }else{
+            storageBase=1;
+            localStorage.setItem('storageBase', JSON.stringify(storageBase));
+            localStorage.setItem('index', JSON.stringify(index));
+            localStorage.setItem('myProjects', JSON.stringify(myProjects));;
+            localStorage.setItem('selection', JSON.stringify(selection));
+            localStorage.setItem('userSelection', JSON.stringify(userSelection));
+            localStorage.setItem('myTasks', JSON.stringify(myTasks));
+            localStorage.setItem('index1', JSON.stringify(index1));
+            localStorage.setItem('idCode', JSON.stringify(idCode));
+        }
     }
+
+    checkStorage();
+    start();
+    addProject();
 
     function mainBuild(){
         let main=document.querySelector('.main');
@@ -112,8 +137,6 @@ content=(()=>{
         })
         mainBuild();
     }
-
-    start();
 
     home.addEventListener('click',()=>{
         userSelection=0;
@@ -204,14 +227,18 @@ content=(()=>{
                         if(myProjects[i].selection==del.id){
                             for(let a=0;a<index1;a++){
                                 if(myTasks[a].selection==myProjects[i].selection){
-                                    myTasks.splice(a,1);    //
-                                    index1=index1-1;    //
+                                    myTasks.splice(a,1);
+                                    localStorage.setItem('myTasks', JSON.stringify(myTasks));  
+                                    index1=index1-1;
+                                    localStorage.setItem('index1', JSON.stringify(index1));
                                     a--;
                                 }
                             }
-                            myProjects.splice(i,1);    //
-                            state1=0;   //
+                            myProjects.splice(i,1);
+                            localStorage.setItem('myProjects', JSON.stringify(myProjects));
+                            state1=0;   
                             index=index-1;
+                            localStorage.setItem('index', JSON.stringify(index));
                         }
                     }
                     if(userSelection!=0 && userSelection!=1 && userSelection!=2){
@@ -280,8 +307,10 @@ content=(()=>{
             del.addEventListener('click',()=>{
                 for(let i=0;i<index1;i++){
                     if(myTasks[i].id==del.id){
-                        myTasks.splice(i,1);    //
-                        index1=index1-1;    //
+                        myTasks.splice(i,1);    
+                        localStorage.setItem('myTasks', JSON.stringify(myTasks));
+                        index1=index1-1;
+                        localStorage.setItem('index1', JSON.stringify(index1));
                     }
                 }
                 addTask();
@@ -310,9 +339,11 @@ content=(()=>{
                 for(let i=0;i<index1;i++){
                     if(myTasks[i].id==check.id){
                         if(myTasks[i].status=="to do"){
-                            myTasks[i].status="done";   //
+                            myTasks[i].status="done";   
+                            localStorage.setItem('myTasks', JSON.stringify(myTasks));
                         }else{
-                            myTasks[i].status="to do"   //
+                            myTasks[i].status="to do";
+                            localStorage.setItem('myTasks', JSON.stringify(myTasks));
                         }
                     }
                 }
@@ -349,15 +380,19 @@ content=(()=>{
             let taskName=T_name.value;
             if(change==0){
                 taskName=new task(T_name.value,T_desc.value,T_date.value,T_priority.value,idCode);
-                myTasks[index1]=taskName;   //
-                index1=index1+1;    //
+                myTasks[index1]=taskName;   
+                localStorage.setItem('myTasks', JSON.stringify(myTasks));
+                index1=index1+1;
+                localStorage.setItem('index1', JSON.stringify(index1));
                 addTask();
-                idCode=idCode+1;   //
+                idCode=idCode+1;   
+                localStorage.setItem('idCode', JSON.stringify(idCode));
             }else{
                 for(let i=0;i<index1;i++){
                     taskName=new task(T_name.value,T_desc.value,T_date.value,T_priority.value,toChange);
                     if(myTasks[i].id==toChange){
-                        myTasks[i]=taskName;    //
+                        myTasks[i]=taskName;    
+                        localStorage.setItem('myTasks', JSON.stringify(myTasks));
                         addTask();
                         change=0;
                         toChange="";
@@ -378,11 +413,14 @@ content=(()=>{
         ev.preventDefault();
         let projectName=document.querySelector('#P_name');
         if(projectName.value!=""){
-            selection=selection+1;  //
+            selection=selection+1;  
+            localStorage.setItem('selection', JSON.stringify(selection));
             let p=projectName.value;
             p=new project(projectName.value);
-            myProjects[index]=p;    //
-            index=index+1;  //
+            myProjects[index]=p;    
+            localStorage.setItem('myProjects', JSON.stringify(myProjects));
+            index=index+1;
+            localStorage.setItem('index', JSON.stringify(index));
             addProject();
             userSelection=selection;
             start();
