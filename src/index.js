@@ -376,7 +376,9 @@ content=(()=>{
         let T_desc=document.querySelector('#T_desc');
         let T_priority=document.querySelector('#T_priority');
         let T_date=document.querySelector('#T_date');
-        if(T_name.value!="" && T_desc!="" && T_priority!="null" && T_date!=""){
+        let taskDate=new Date(T_date.value.replace(/-/g,'\/'));
+        taskDate.setHours(0,0,0,0);
+        if(T_name.value!="" && T_desc!="" && T_priority!="null" && T_date!="" && taskDate>=todays){
             let taskName=T_name.value;
             if(change==0){
                 taskName=new task(T_name.value,T_desc.value,T_date.value,T_priority.value,idCode);
@@ -400,7 +402,7 @@ content=(()=>{
                 }
             }
             close("2");
-        }else{alert("Please complete all the fields!")} 
+        }else{alert("Please complete all the fields,and select a date in the future!")} 
     })
 
     let addP=document.querySelector('#addProject');
